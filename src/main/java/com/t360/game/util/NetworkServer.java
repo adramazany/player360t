@@ -11,16 +11,23 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.function.Function;
 
+/**
+ * @author: adelramezani.jd@gmail.com
+ * Utility that simplify managing and creating network server to listen for received messages
+ * And getting a reply function provided by caller to be used in time of getting new connection and message
+ */
 public class NetworkServer {
     private final static Logger logger = LoggerFactory.getLogger(NetworkServer.class);
     private final int port;
     private final Function<String, String> reply;
 
+    // Constructing NetworkServer and holding the reply function provided by caller to be used in time of getting new connection and message
     public NetworkServer(int port, Function<String, String> reply){
         this.port = port;
         this.reply = reply;
     }
 
+    // Listening to the network messages and create a thread-base client handler and passing the reply function
     public void listen()  {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("Server is listening on port %d ...".formatted(port));
@@ -41,6 +48,10 @@ public class NetworkServer {
         }
     }
 }
+
+/**
+ * Utility for managing client connection to get message and reply it by forwarding it to provided function
+ */
 class ClientHandler extends Thread {
     private final static Logger logger = LoggerFactory.getLogger(ClientHandler.class);
     private final Socket clientSocket;

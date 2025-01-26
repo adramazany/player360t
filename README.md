@@ -103,3 +103,20 @@ TODOs:
 8. documentation
 9. adding todos in place that required the timeout to preventing deadlock occurrence
 
+
+java -cp player-1.0-SNAPSHOT-full.jar com.t360.game.LocalPlayers
+
+
+java -jar player-1.0-SNAPSHOT-full.jar 
+java -jar player-1.0-SNAPSHOT-full.jar --help
+
+Syntax: java -jar player-1.0-SNAPSHOT-full.jar <playerId> [initial-chat-to] [initial-message] [initial-count]
+    playerId            The unique id for player from list [initiator,player1..player10]
+                        In case of playerId is 'initiator' and the rest of arguments are not entered, it will try to send initial predefined messages to 'player1' in loop of 5 sequential send and receive.
+    initial-chat-to     The unique id for another player from above list that you would like to send initial message to him/her
+    initial-message     The initial message that you would like to send to another player
+    initial-count       The count of initial sequential send and receive to the other player
+
+
+java -jar player-1.0-SNAPSHOT-full.jar player2
+java -jar player-1.0-SNAPSHOT-full.jar player1 player2 TESTMESSAGE 3

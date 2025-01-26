@@ -6,6 +6,10 @@ import org.slf4j.LoggerFactory;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author: adelramezani.jd@gmail.com
+ *
+ */
 public class ReplyMessageProvider {
     private final static Logger logger = LoggerFactory.getLogger(ReplyMessageProvider.class);
     public static String parseAndReply(String message) {
@@ -26,5 +30,4 @@ public class ReplyMessageProvider {
             }
         }
     }
-
 }
