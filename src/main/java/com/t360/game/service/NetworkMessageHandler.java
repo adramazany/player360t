@@ -11,14 +11,29 @@ import com.t360.game.util.NetworkServer;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 
+/**
+ * @author adelramezani.jd@gmail.com
+ * Service provide infrastructure of messaging between network players,
+ *      and listening to messages.
+ * By running a network server to get message from network players.
+ * And handling network messages receive in string format by detection of its type (message/request),
+ *      and putting it over local messaging infrastructure,
+ *      and taking and replying over network.
+ * And handling local messages waiting to transferred over network,
+ *      and returning the response into the local messaging queue
+ */
 public class NetworkMessageHandler {
     private final static Logger logger = LoggerFactory.getLogger(NetworkMessageHandler.class);
     private final String playerId;
     private final ContactProfile playerProfile;
 
+    /**
+     *  Running a NetworkServer and forwarding received messages to handleReceivedMessageAndReply,
+     *  And starting listener to network messages,
+     *  And starting the handleSendMessageAndWaitForResponse to handle local messages
+     */
     public NetworkMessageHandler(String playerId){
         this.playerId = playerId;
         this.playerProfile = ContactProvider.get(playerId);
@@ -29,6 +44,11 @@ public class NetworkMessageHandler {
         ExecutorService.execute(this::handleSendMessageAndWaitForResponse);
     }
 
+    /**
+     * Handling string network messages by detection of its type (message/request),
+     *      and putting it over local messaging infrastructure,
+     *      and taking and replying over network.
+     */
     public String handleReceivedMessageAndReply(String networkMessage) {
         JSONObject json = new JSONObject(networkMessage);
 
@@ -60,6 +80,10 @@ public class NetworkMessageHandler {
         return "400-Bad request";
     }
 
+    /**
+     * Handling local messages waiting to transferred over network,
+     *      and returning the response into the local messaging queue
+     */
     public void handleSendMessageAndWaitForResponse(){
         logger.info("The process of listen to internal message and sending to the network and wait for response started for: %s".formatted(getPlayerId()));
         while(true) {

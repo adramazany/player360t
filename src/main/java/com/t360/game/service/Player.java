@@ -9,10 +9,24 @@ import org.slf4j.LoggerFactory;
 
 import com.t360.game.util.ExecutorService;
 
+/**
+ * @author adelramezani.jd@gmail.com
+ * Service provide infrastructure of messaging between local players,
+ * By running a network server to get message from network players.
+ * Handling local messages,
+ *      by listening messages on local message queue,
+ *      and replying in the same way.
+ * And handling local request of repeating a sequential send/receive messaging between local players
+ *      and returning the response into the local messaging queue
+ */
 public class Player{
     private final static Logger logger = LoggerFactory.getLogger(Player.class);
     private final String playerId;
 
+    /**
+     *  Starting listener for getting local messages and reply to them,
+     *  And starting listener for getting local request to start a loop of sequential send/receive messages between local players,
+     */
     public Player(String playerId){
         this.playerId = playerId;
         ExecutorService.execute(this::receiveMessageAndReply);
@@ -20,6 +34,11 @@ public class Player{
         logger.info("Player with id: %s created.".formatted(playerId));
     }
 
+    /**
+     * Handling local request,
+     *      by listening request on local message queue,
+     *      and start a loop of sequential send/receive messages between local players.
+     */
     public void receiveRequestAndRepeatSending(){
         while(true) {
             RequestMessage request = MessageQueueProvider.request.take((candidate) -> {
@@ -38,6 +57,10 @@ public class Player{
         }
     }
 
+    /**
+     * Sending message to local player by putting it in the message queue,
+     * And waiting to its response to return.
+     */
     public Message sendMessageAndWaitForResponse(Message message) throws InterruptedException {
         logger.debug("This message will send and wait for response: %s".formatted(message));
         try {
@@ -53,6 +76,11 @@ public class Player{
                 playerId.equalsIgnoreCase(candidate.to()); } );
     }
 
+    /**
+     * Handling local messages,
+     *      by listening messages on local message queue,
+     *      and replying in the same way.
+     */
     public void receiveMessageAndReply(){
         logger.info("The process of receiving message and reply started for: %s".formatted(playerId));
         while(true) {

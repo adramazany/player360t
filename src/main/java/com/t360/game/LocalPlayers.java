@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+/**
+ * @author adelramezani.jd@gmail.com
+ * Main class provide the local messaging platform for players
+ */
 public class LocalPlayers {
     private final static Logger logger = LoggerFactory.getLogger(LocalPlayers.class);
     public static void main(String[] args) throws InterruptedException {
