@@ -1,5 +1,6 @@
 package com.t360.game.util;
 
+import com.t360.game.config.Config;
 import com.t360.game.config.MessageQueueProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class MessageQueue<T> {
             while((message = blockingQueue.peek()) == null) {
                 // Wait for a short interval (e.g., using Thread.sleep())
                 try{
-                    Thread.sleep(100L);
+                    Thread.sleep(Config.messageQueueTakeSleep);
                 }catch(Exception ex){
                     logger.error(ex.getMessage());
                 }

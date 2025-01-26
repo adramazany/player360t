@@ -1,44 +1,64 @@
 package com.t360.game.service;
 
-//import static org.junit.jupiter.api.Assertions.*;
+import com.t360.game.config.MessageQueueProvider;
+import com.t360.game.model.Message;
+import com.t360.game.model.RequestMessage;
+import com.t360.game.util.ExecutorService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.*;
 class PlayerTest {
 
-    public static void main(String[] args) {
-        String[] ar = new String[]{
-            "message 0",
-            "message 0 1",
-            "message 0 1 1",
-            "message 0 1 1 2",
-            "message a 0 1 5",
-            "message a 0 1 5 ABC"
-        };
-        Arrays.stream(ar).forEach((m) -> System.out.println("%s => %s".formatted(m,reply(m))) );
-        String st = ar[0];
-        System.out.println(st);
+    Player player1 = new Player("player1");
 
+    @Test
+    @Timeout(value=5, unit = TimeUnit.SECONDS, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+    void sendMessageAndWaitForResponse() throws ExecutionException, InterruptedException {
+        Message message= new Message("m1", "test 0","player1","player2",false);
+        Message expected= new Message("m1","test 0 1","player2","player1",true);
+        Future<Message> actual = ExecutorService.submit(() ->
+            { return player1.sendMessageAndWaitForResponse(message); });
 
+        MessageQueueProvider.message.take(candidate -> { return true; });
+        MessageQueueProvider.message.put(expected);
+
+        assertEquals(expected, actual.get());
     }
 
-//    @org.junit.jupiter.api.Test
-    static String reply(String message) {
-        Pattern pattern2No = Pattern.compile("[\\w\\s]+(\\d+)\\s+(\\d+)$");
-        Pattern pattern1No = Pattern.compile("[\\w\\s]+(\\d+)$");
-        Matcher m = pattern2No.matcher(message);
-        if(m.find()){
-            return message+" "+(Integer.parseInt(m.group(1))+1);
-        }else{
-            m = pattern1No.matcher(message);
-            if(m.find()) {
-                return message+" 1";
-            }else{
-                System.err.println("Not found!");
-                throw new IllegalArgumentException("The input message is not match with declared pattern!");
-            }
-        }
+    @Test
+    @Timeout(value=15, unit = TimeUnit.SECONDS, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
+    void receiveRequestAndRepeatSending() throws InterruptedException {
+        RequestMessage request= new RequestMessage("r1", "test","player1","player2",2);
+        Message expected1= new Message("r1", "test 0","player1","player2",false);
+        Message expected2= new Message("r1","test 0 1 1","player1","player2",false);
+
+        ExecutorService.execute(() -> { player1.receiveRequestAndRepeatSending(); });
+
+        MessageQueueProvider.request.put(request);
+
+        Message actual1 = MessageQueueProvider.message.take(candidate -> { return true; });
+        MessageQueueProvider.message.put(actual1.copyToReply(actual1.message()+" 1", true));
+        Message actual2 = MessageQueueProvider.message.take(candidate -> {  return !candidate.isReply(); });
+
+        assertEquals(expected1, actual1);
+        assertEquals(expected2, actual2);
+    }
+
+    @Test
+    void receiveMessageAndReply() throws InterruptedException {
+        Message message= new Message("m1", "test 0","player2","player1",false);
+        Message expected= new Message("m1","test 0 1","player1","player2",true);
+
+        ExecutorService.execute(() ->{ player1.receiveMessageAndReply(); });
+        MessageQueueProvider.message.put(message);
+
+        Message actual = MessageQueueProvider.message.take(candidate -> { return candidate.isReply(); });
+
+        assertEquals(expected, actual);
     }
 }

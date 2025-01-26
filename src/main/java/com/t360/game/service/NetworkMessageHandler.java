@@ -61,18 +61,17 @@ public class NetworkMessageHandler {
     }
 
     public void handleSendMessageAndWaitForResponse(){
-        logger.info("The process of listen to internal message and sending to the network and wait for response started for: %s".formatted(playerId));
+        logger.info("The process of listen to internal message and sending to the network and wait for response started for: %s".formatted(getPlayerId()));
         while(true) {
             Message message = MessageQueueProvider.message.take((candidate) -> {
-                return !playerId.equalsIgnoreCase(candidate.to()) &&
-                        playerId.equalsIgnoreCase(candidate.from()) &&
+                return getPlayerId().equalsIgnoreCase(candidate.from()) &&
                         ContactProvider.get(candidate.to())!=null &&
                         !candidate.isReply();
             });
 
             ContactProfile toProfile = ContactProvider.get(message.to());
             try {
-                String responseStr = new NetworkClient(toProfile.host(), toProfile.port()).sendAndWaitForResponse( message.toJsonString());
+                String responseStr = getNetworkClient(toProfile.host(), toProfile.port()).sendAndWaitForResponse( message.toJsonString());
                 Message response = Message.from(responseStr);
                 MessageQueueProvider.message.put(response);
                 logger.debug("The message replied by: %s".formatted(response));
@@ -82,5 +81,12 @@ public class NetworkMessageHandler {
                 logger.error("It was not able to put reply message in the queue",e);
             }
         }
+    }
+    public NetworkClient getNetworkClient(String host, int port) throws IOException {
+        return new NetworkClient(host, port);
+    }
+
+    public String getPlayerId() {
+        return playerId;
     }
 }
