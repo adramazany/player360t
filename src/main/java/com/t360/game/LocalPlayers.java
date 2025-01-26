@@ -10,8 +10,8 @@ import java.util.UUID;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class SingleProcessPlayers {
-    private final static Logger logger = LoggerFactory.getLogger(SingleProcessPlayers.class);
+public class LocalPlayers {
+    private final static Logger logger = LoggerFactory.getLogger(LocalPlayers.class);
     public static void main(String[] args) throws InterruptedException {
         logger.info("Starting Single Process Players application ...");
 

@@ -7,14 +7,11 @@ public record Message(String messageId, String message, String from, String to, 
     public Message copyToReply(String newMessage, Boolean isReply){
         return new Message(this.messageId, newMessage, this.to, this.from, isReply);
     }
-    public JSONObject toJson(){
-        return JsonUtil.toJson(this);
-    }
     public String toJsonString(){
-        return toJson().toString();
+        return JsonUtil.toJson(this).toString();
     }
     public static boolean isMessage(JSONObject json){
-        return json.has("messageId") &&
+        return json.has( "messageId") &&
                 json.has("message") &&
                 json.has("from") &&
                 json.has("to") &&

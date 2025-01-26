@@ -95,10 +95,11 @@ Then I
 TODOs:
 1. separate processes
 2. adding to github
-3. adding todos in place that required the timeout to preventing deadlock occurrence
-3. comments
-4. unit tests
-5. mockito test
-5. architecture diagram
-6. documentation
+3. build full jar
+5. unit tests
+6. mockito test
+4. comments
+7. architecture diagram
+8. documentation
+9. adding todos in place that required the timeout to preventing deadlock occurrence
 

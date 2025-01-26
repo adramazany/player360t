@@ -72,7 +72,7 @@ public class NetworkMessageHandler {
 
             ContactProfile toProfile = ContactProvider.get(message.to());
             try {
-                String responseStr = NetworkClient.sendAndWaitForResponse( message.toJsonString(), toProfile.host(), toProfile.port() );
+                String responseStr = new NetworkClient(toProfile.host(), toProfile.port()).sendAndWaitForResponse( message.toJsonString());
                 Message response = Message.from(responseStr);
                 MessageQueueProvider.message.put(response);
                 logger.debug("The message replied by: %s".formatted(response));
