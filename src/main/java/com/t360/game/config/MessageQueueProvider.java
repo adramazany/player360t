@@ -14,10 +14,14 @@ import com.t360.game.util.MessageQueue;
  */
 public class MessageQueueProvider {
 
-    // Local message queue of message topics
+    /**
+     * Local message queue of message topics
+    */
     public final static MessageQueue<Message> message = new MessageQueue<Message>();
 
-    // Local message queue of request topics
+    /**
+     * Local message queue of request topics
+    */
     public final static MessageQueue<RequestMessage> request = new MessageQueue<RequestMessage>();
 }
 

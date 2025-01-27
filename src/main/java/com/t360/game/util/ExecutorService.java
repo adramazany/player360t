@@ -11,12 +11,16 @@ import java.util.concurrent.Future;
 public class ExecutorService {
     private final static java.util.concurrent.ExecutorService executorService = Executors.newCachedThreadPool();
 
-    // Execute a runnable task in a new thread
+    /**
+     * Execute a runnable task in a new thread
+    */
     public static void execute(Runnable command) {
         executorService.execute(command);
     }
 
-    // Execute a callable task in a new thread and return the result
+    /**
+     * Execute a callable task in a new thread and return the result
+    */
     public static <T> Future<T> submit(Callable<T> task) {
         return executorService.submit(task);
     }

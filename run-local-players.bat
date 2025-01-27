@@ -1,0 +1,1 @@
+java -cp target\player-1.0-SNAPSHOT-full.jar com.t360.game.LocalPlayers

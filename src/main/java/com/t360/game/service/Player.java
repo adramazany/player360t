@@ -11,8 +11,7 @@ import com.t360.game.util.ExecutorService;
 
 /**
  * @author adelramezani.jd@gmail.com
- * Service provide infrastructure of messaging between local players,
- * By running a network server to get message from network players.
+ * Service provide infrastructure of messaging between this player with other local and network players,
  * Handling local messages,
  *      by listening messages on local message queue,
  *      and replying in the same way.

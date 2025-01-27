@@ -53,7 +53,6 @@ public class NetworkMessageHandler {
         JSONObject json = new JSONObject(networkMessage);
 
         if (Message.isMessage(json)) {
-            // TODO: It can be with a simple JsonMapper tool
             Message message = Message.from(json);
             try {
                 MessageQueueProvider.message.put(message);

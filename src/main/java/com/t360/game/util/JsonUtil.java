@@ -15,7 +15,9 @@ import java.lang.reflect.Field;
 public class JsonUtil {
     private final static Logger logger = LoggerFactory.getLogger(JsonUtil.class);
 
-    // Convert object to json object, to be convert to string and transferred over network.
+    /**
+     * Convert object to json object, to be convert to string and transferred over network.
+    */
     public static JSONObject toJson(Object object) {
         Class<?> c = object.getClass();
         JSONObject jsonObject = new JSONObject();

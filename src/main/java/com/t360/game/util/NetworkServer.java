@@ -21,13 +21,17 @@ public class NetworkServer {
     private final int port;
     private final Function<String, String> reply;
 
-    // Constructing NetworkServer and holding the reply function provided by caller to be used in time of getting new connection and message
+    /**
+     * Constructing NetworkServer and holding the reply function provided by caller to be used in time of getting new connection and message
+    */
     public NetworkServer(int port, Function<String, String> reply){
         this.port = port;
         this.reply = reply;
     }
 
-    // Listening to the network messages and create a thread-base client handler and passing the reply function
+    /**
+     * Listening to the network messages and create a thread-base client handler and passing the reply function
+    */
     public void listen()  {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             logger.info("Server is listening on port %d ...".formatted(port));
@@ -35,9 +39,8 @@ public class NetworkServer {
             while (true) {
                 try {
                     Socket clientSocket = serverSocket.accept();
-                    logger.info("New client connected: %s:%d".formatted(clientSocket, clientSocket.getPort())); // .getInetAddress()
+                    logger.info("New client connected: %s:%d".formatted(clientSocket, clientSocket.getPort()));
 
-                    // Create a new thread to handle the client
                     new ClientHandler(clientSocket, reply).start();
                 } catch (IOException e) {
                     logger.error("Error handling client connection: " + e.getMessage(),e);
@@ -65,15 +68,12 @@ class ClientHandler extends Thread {
     @Override
     public void run() {
         try {
-            // Input and output streams for this client
             BufferedReader input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter output = new PrintWriter(clientSocket.getOutputStream(), true);
 
-            // Read request from client
             String clientRequest = input.readLine();
             logger.debug("Received from client: " + clientRequest);
 
-            // Respond to client
             String response = reply.apply(clientRequest) ;
             output.println(response);
             logger.debug("Sent to client: " + response);

@@ -8,7 +8,9 @@ import java.util.regex.Pattern;
 
 /**
  * @author adelramezani.jd@gmail.com
- *
+ * A business specific placeholder for responding rules and regulations,
+ * Currently, it parses the received message and add numbers to the message as reply,
+ * to be able to track the interaction of messages between players
  */
 public class ReplyMessageProvider {
     private final static Logger logger = LoggerFactory.getLogger(ReplyMessageProvider.class);

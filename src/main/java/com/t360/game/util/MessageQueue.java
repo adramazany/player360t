@@ -16,20 +16,25 @@ import java.util.function.Function;
 public class MessageQueue<T> {
     private final static Logger logger = LoggerFactory.getLogger(MessageQueueProvider.class);
 
-    // Define a linked blocking queue (perfect for multi-threading platform) for every topic
+    /**
+     * Define a linked blocking queue (perfect for multi-threading platform) for every topic
+    */
     private final BlockingQueue<T> blockingQueue = new LinkedBlockingQueue<T>();
 
-    // Put a message of specific topic into its queue
+    /**
+     * Put a message of specific topic into its queue
+    */
     public void put(T t) throws InterruptedException {
         blockingQueue.put(t);
     }
 
-    // Waiting for a specific message of define topic that pass the validation rule will define by caller
+    /**
+     * Waiting for a specific message of define topic that pass the validation rule will define by caller
+    */
     public T take(Function<T, Boolean> valiate){
         while(true){
             T message;
             while((message = blockingQueue.peek()) == null) {
-                // Wait for a short interval (e.g., using Thread.sleep())
                 try{
                     Thread.sleep(Config.messageQueueTakeSleep);
                 }catch(Exception ex){
@@ -44,7 +49,9 @@ public class MessageQueue<T> {
         }
     }
 
-    // Clear all existing messages in queue
+    /**
+     * Clear all existing messages in queue
+    */
     public void clear() {
         blockingQueue.clear();
     }

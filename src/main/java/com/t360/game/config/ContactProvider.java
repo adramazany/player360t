@@ -12,7 +12,9 @@ import java.util.Hashtable;
 public class ContactProvider {
     public final static Hashtable<String, ContactProfile> profiles = new Hashtable<>();
 
-    // Load sample players: initiator@localhost:8000, player1@localhost:8001-player10@localhost:8010
+    /**
+     * Load sample players: initiator@localhost:8000, player1@localhost:8001-player10@localhost:8010
+    */
     static{
         profiles.put(Config.initiator, new ContactProfile(Config.initiator, Config.host, Config.port));
         for (int i = 1; i <= 10; i++) {

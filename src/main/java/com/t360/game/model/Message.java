@@ -9,17 +9,23 @@ import org.json.JSONObject;
  */
 public record Message(String messageId, String message, String from, String to, Boolean isReply) {
 
-    // Create reply to this message by changing the message and exchanging from and to
+    /**
+     * Create reply to this message by changing the message and exchanging from and to
+    */
     public Message copyToReply(String newMessage, Boolean isReply){
         return new Message(this.messageId, newMessage, this.to, this.from, isReply);
     }
 
-    // Convert this message to json string to sending over network
+    /**
+     * Convert this message to json string to sending over network
+    */
     public String toJsonString(){
         return JsonUtil.toJson(this).toString();
     }
 
-    // Check the json object is message or not
+    /**
+     * Check the json object is message or not
+    */
     public static boolean isMessage(JSONObject json){
         return json.has( "messageId") &&
                 json.has("message") &&
@@ -28,14 +34,18 @@ public record Message(String messageId, String message, String from, String to, 
                 json.has("isReply");
     }
 
-    // Create message from json string
+    /**
+     * Create message from json string
+    */
     public static Message from(String jsonStr){
         JSONObject json = new JSONObject(jsonStr);
         if(isMessage(json))return from(json);
         else return null;
     }
 
-    // Create message from json object
+    /**
+     * Create message from json object
+    */
     public static Message from(JSONObject json){
         return new Message(
                 json.getString("messageId"),
